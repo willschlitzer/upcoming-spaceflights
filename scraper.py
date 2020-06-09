@@ -20,20 +20,31 @@ def parse_launch_dates(msn_datename):
         r"""<span class="launchdate">[A-Z][a-z]+\. \d+/\d+</span>""",
     ]
     datename_text = str(msn_datename)
-    print(datename_text)
     for exp in exp_list:
         date = re.findall(exp, datename_text)
         if date:
             date_html_string = date[0]
     try:
         raw_date_string = date_html_string.replace("""<span class="launchdate">""", "").replace("</span>", "")
+        day = get_day(date_string=raw_date_string)
         month = get_month(month_string=raw_date_string)
         year = get_year(month=month)
+        print(day)
         print(month)
         print(year)
-        return raw_date_string
+        date_string = str(day) + " " + month + ", " + str(year)
+        return date_string
     except:
         return "No date string"
+
+def get_day(date_string):
+    multi_days = re.findall(r"\d+/\d+", date_string)
+    if multi_days:
+        days = multi_days[0]
+        day = re.findall(r"/\d+", days)[0].replace("/", "")
+    else:
+        day = re.findall(r"\d+", date_string)[0]
+    return day
 
 def get_year(month):
     month_num = int(datetime.strptime(month, "%B").month)
@@ -50,7 +61,6 @@ def get_month(month_string):
                      "aug":"August","sep":"September", "oct":"October", "nov":"November", "dec":"December"}
     for key in month_abbrevs.keys():
         if key in month_string.lower():
-            print(month_string.lower())
             return month_abbrevs[key]
     return "No valid month"
 
