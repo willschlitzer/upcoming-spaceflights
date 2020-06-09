@@ -14,6 +14,7 @@ def parse_schedule_page(url):
 
 def parse_launch_dates(msn_datename):
     exp_list = [
+        r"""<span class="launchdate">[A-Z][a-z]+/[A-Z][a-z]+ \d+/1+</span>"""
         r"""<span class="launchdate">[A-Z][a-z]+\. \d+</span>""",
         r"""<span class="launchdate">[A-Z][a-z]+ \d+</span>""",
         r"""<span class="launchdate">[A-Z][a-z]+ \d+/\d+</span>""",
