@@ -40,12 +40,17 @@ def parse_launch_dates(msn_datename):
 
 def get_day(date_string):
     multi_days = re.findall(r"\d+/\d+", date_string)
+    day = ""
     if multi_days:
         days = multi_days[0]
         day = re.findall(r"/\d+", days)[0].replace("/", "")
+        return day
     else:
-        day = re.findall(r"\d+", date_string)[0]
-    return day
+        try:
+            day = re.findall(r"\d+", date_string)[0]
+            return day
+        except IndexError:
+            return "No valid day"
 
 def get_year(month):
     month_num = int(datetime.strptime(month, "%B").month)
