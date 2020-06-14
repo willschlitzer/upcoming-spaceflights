@@ -86,6 +86,9 @@ def get_mission_html(page_html):
     descrip_divs = soup.find_all("div", class_="missdescrip")
     return list(zip(date_name_divs, msn_data_divs, descrip_divs))
 
+def get_time():
+    return datetime.now()
+
 
 if __name__ == "__main__":
     parse_schedule_page(url=sfn_ls_url)
