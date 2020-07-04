@@ -11,8 +11,8 @@ def parse_schedule_page(url):
     all_msn_zip = get_mission_html(page_html=page_html)
     parse_missions(msn_zip=all_msn_zip)
 
-
-def parse_launch_dates(msn_datename):
+def date_regex(datename_text):
+    date_html_string = ""
     exp_list = [
         r"""<span class="launchdate">[A-Z][a-z]+/[A-Z][a-z]+ \d+/1+</span>"""
         r"""<span class="launchdate">[A-Z][a-z]+\. \d+</span>""",
@@ -20,22 +20,25 @@ def parse_launch_dates(msn_datename):
         r"""<span class="launchdate">[A-Z][a-z]+ \d+/\d+</span>""",
         r"""<span class="launchdate">[A-Z][a-z]+\. \d+/\d+</span>""",
     ]
-    datename_text = str(msn_datename)
     for exp in exp_list:
         date = re.findall(exp, datename_text)
         if date:
             date_html_string = date[0]
-    try:
+            return date_html_string
+    return date_html_string
+
+def parse_launch_dates(msn_datename):
+    datename_text = str(msn_datename)
+    date_html_string = date_regex(datename_text=datename_text)
+    if date_html_string:
         raw_date_string = date_html_string.replace("""<span class="launchdate">""", "").replace("</span>", "")
+        print(raw_date_string)
         day = get_day(date_string=raw_date_string)
         month = get_month(month_string=raw_date_string)
         year = get_year(month=month)
-        print(day)
-        print(month)
-        print(year)
         date_string = str(day) + " " + month + ", " + str(year)
         return date_string
-    except:
+    else:
         return "No date string"
 
 def get_day(date_string):
@@ -78,6 +81,10 @@ def parse_missions(msn_zip):
             print(date_string)
             print(launch_time_string)
 
+def get_string(msn_zip):
+    date_name_string = str(msn_zip[0])
+    launch_time_string = str(msn_zip[1])
+    descrip_string = str(msn_zip[2])
 
 def get_mission_html(page_html):
     soup = BeautifulSoup(page_html, "html.parser")
